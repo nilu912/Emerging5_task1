@@ -1,19 +1,31 @@
 import React, { Children } from "react";
 import { createContext, useContext, useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const AuthContext = createContext(null);
 export const useAuth = () => useContext(AuthContext);
 
 const AuthProvider = ({ children }) => {
+    const location = useLocation();
+    const navigator = useNavigate();
   const [user, setUser] = useState(null);
-  const navigator = useNavigate();
+  const [locationPaths, setLocationPaths] = useState([]);
+
   useEffect(() => {
     const userData = localStorage.getItem("user");
     console.log(userData);
     setUser(JSON.parse(userData));
     navigator("/dashboard");
   }, []);
+  useEffect(() => {
+    const getNavLocation = () => {
+      const pathItems = location.pathname.split("/");
+      pathItems.shift();
+      console.log(pathItems);
+      setLocationPaths(pathItems);
+    };
+    getNavLocation();
+  }, [location]);
 
   const login = (userData) => {
     console.log(userData);
@@ -27,7 +39,7 @@ const AuthProvider = ({ children }) => {
     navigator("/login");
   };
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider value={{ user, login, logout, locationPaths }}>
       {children}
     </AuthContext.Provider>
   );

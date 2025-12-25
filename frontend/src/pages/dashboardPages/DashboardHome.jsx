@@ -1,9 +1,11 @@
-import React from 'react'
+import React from "react";
 
 const DashboardHome = () => {
   return (
-    <div>Dashboard Home</div>
-  )
-}
+    <div>
+      <p className="text-blue-800 flex gap-1">Dashboard<p className="text-green-700 flex gap-1 font-bold"> Home</p></p>
+    </div>
+  );
+};
 
-export default DashboardHome
+export default DashboardHome;

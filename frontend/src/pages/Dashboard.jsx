@@ -24,6 +24,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import DashboardHome from "./dashboardPages/DashboardHome.jsx";
 import Users from "./dashboardPages/Users.jsx";
 import { useAuth } from "../context/authContext.jsx";
+import BreadcrumbComp from "../components/BreadcrumbComp.jsx";
 
 const items = [
   getItem("Dashboard", "/dashboard/", <PieChartOutlined />),
@@ -86,12 +87,22 @@ const Dashboard = () => {
           />
         </Sider>
         <Layout>
-          {/* <div className="flex bg-white items-center"> */}
-            {/* <p className="h-12 ">Hello, Meet</p> */}
-            {/* <div className="hidden md:flex"> */}
+          <div className="h-auto min-h-12 flex bg-white items-center px-4">
+            <p className="text-xl font-bold text-gray-800 min-w-[12rem] w-[16rem]">
+              Welcome, {user.userName}
+            </p>
+            <div className="hidden md:block w-full">
               <Navbar />
-            {/* </div> */}
-          {/* </div> */}
+            </div>
+            <div className="ml-auto">
+              <Flex gap="small">
+                <Button danger onClick={logout}>
+                  Logout
+                </Button>
+              </Flex>
+            </div>
+          </div>
+
           <Content style={{ margin: "0 16px" }}>
             {/* <Breadcrumb
               style={{ margin: "16px 0" }}
@@ -108,14 +119,7 @@ const Dashboard = () => {
               Bill is a cat.
             </div> */}
             <div className="h-16 border-b-2 border-gray-300 flex items-center justify-between">
-              <p className="text-2xl font-bold">Welcome, {user.userName}</p>
-              <div className="">
-                <Flex gap="small">
-                  <Button danger onClick={logout}>
-                    Logout
-                  </Button>
-                </Flex>
-              </div>
+              <BreadcrumbComp />
             </div>
             <Routes>
               <Route path="/" element={<DashboardHome />} />
