@@ -1,13 +1,26 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Button, Col, Drawer, Form, Input, InputNumber, Row, Select, Space } from "antd";
 import { data } from "../utils/userData.js";
 
-const DrawerComp = ({ open, onClose }) => {
+const DrawerComp = ({ open, onClose, isEdit ,editData }) => {
   const [form] = Form.useForm();
 
+  useEffect(() => {
+    if(isEdit){
+      form.setFieldsValue(editData);
+    } else{
+      form.resetFields();
+    }
+  }, [editData])
+
   const onFinish = (values) => {
+    console.log("editData", editData);
     console.log("Submitted Data:", values);
-    data.push(values);
+    if(isEdit){
+      data[editData.key] = { ...values, key: editData.key };
+    } else{
+      data.push(values);  
+    }
     onClose();
     form.resetFields();
   };

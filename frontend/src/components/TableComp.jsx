@@ -1,4 +1,4 @@
-import React, { act, useState } from "react";
+import React, { act, useEffect, useState } from "react";
 import { Button, Space, Table } from "antd";
 import { FaEdit } from "react-icons/fa";
 import { MdDeleteForever } from "react-icons/md";
@@ -11,11 +11,14 @@ import { IoMdAdd } from "react-icons/io";
 import { data } from "../utils/userData.js";
 import DrawerComp from "./DrowerComp.jsx";
 import FilterModal from "../components/FilterModal.jsx";
+import * as XLSX from 'xlsx';
 
 const TableComp = () => {
   const [filteredInfo, setFilteredInfo] = useState({});
   const [sortedInfo, setSortedInfo] = useState({});
   const [open, setOpen] = useState(false);
+  const [isEdit, setIsEdit] = useState(false);
+  const [selectEditData, setSelectEditData] = useState(null);
   const [arrow, setArrow] = useState("Show");
   const handleChange = (pagination, filters, sorter) => {
     console.log("Various parameters", pagination, filters, sorter);
@@ -53,6 +56,12 @@ const TableComp = () => {
     const filteredData = data.filter((item) => item.usertype === userType);
     setFilteredData(filteredData);
   };
+  const exportToExcel = () => {
+    const workbook = XLSX.utils.book_new();
+    const worksheet = XLSX.utils.json_to_sheet(filteredData);
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Users");
+    XLSX.writeFile(workbook, "UsersData.xlsx");
+  }
 
   const columns = [
     {
@@ -65,10 +74,18 @@ const TableComp = () => {
       // sorter: (a, b) => a.email.localeCompare(b.email),
       // sortOrder: sortedInfo.columnKey === "email" ? sortedInfo.order : null,
       ellipsis: true,
-      render: () => {
+      render: (_, record) => {
         return (
           <div className="flex gap-3 text-md">
-            <FaEdit />
+            <button
+              onClick={() => {
+                setOpen(true);
+                setIsEdit(true);
+                setSelectEditData(record);
+              }}
+            >
+              <FaEdit />
+            </button>
             <MdDeleteForever />
             <FaKey />
           </div>
@@ -96,7 +113,7 @@ const TableComp = () => {
           </Button>
         ),
       filteredValue: filteredInfo.active || null,
-      onFilter: (value, record) => record.active.includes(value),
+      onFilter: (value, record) => record.active.includes(value.toString()),
       sorter: (a, b) => a.active.toString().localeCompare(b.active.toString()),
       sortOrder: sortedInfo.columnKey === "active" ? sortedInfo.order : null,
       ellipsis: true,
@@ -210,6 +227,9 @@ const TableComp = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [filteredData, setFilteredData] = useState(data);
   const [searchValue, setSearchValue] = useState("");
+  const updateData = (newData) => {
+    setFilteredData(newData);
+  };
   const filterBySearchValue = async (e) => {
     const value = e.target.value;
     setSearchValue(value);
@@ -264,7 +284,7 @@ const TableComp = () => {
               Filter
             </span>
           </button> */}
-          <button className="bg-blue-900 text-white px-3 py-1 rounded-full">
+          <button className="bg-blue-900 text-white px-3 py-1 rounded-full" onClick={() => exportToExcel()}>
             <span className="flex items-center gap-2 justify-center">
               <PiMicrosoftExcelLogoFill />
               Excel
@@ -272,7 +292,11 @@ const TableComp = () => {
           </button>
           <button
             className="bg-blue-900 text-white px-3 py-1 rounded-full"
-            onClick={() => setOpen(true)}
+            onClick={() => {
+              setOpen(true);
+              setIsEdit(false);
+              setSelectEditData(null);
+            }}
           >
             <span className="flex items-center gap-2 justify-center">
               <IoMdAdd />
@@ -287,7 +311,13 @@ const TableComp = () => {
         onChange={handleChange}
         className="min-w-200"
       />
-      <DrawerComp open={open} onClose={() => setOpen(false)} />
+      <DrawerComp
+        open={open}
+        onClose={() => setOpen(false)}
+        isEdit={isEdit}
+        editData={selectEditData}
+        updateData={updateData}
+      />
       {/* <FilterModal open={filterModelOpen} handleCancel={()=>setFilterModelOpen(false)}/> */}
     </>
   );

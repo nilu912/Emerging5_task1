@@ -1,9 +1,15 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import loginImage from "../assets/loginImg.jpg";
+// import loginImage from "../assets/loginImg.jpg";
+// import loginImage from "../assets/5065282.jpg";
+import loginImage from "../assets/9142209.jpg";
+
 import logo from "../assets/pngwing.com.png";
 import eye from "../assets/password/eye.png";
 import eyeOff from "../assets/password/hidden.png";
+import { FaRegEye } from "react-icons/fa";
+import { FaRegEyeSlash } from "react-icons/fa";
+
 import { useAuth } from "../context/authContext.jsx";
 const Login = () => {
     const { login } = useAuth();
@@ -26,7 +32,7 @@ const Login = () => {
       className="h-screen w-screen bg-cover bg-no-repeat flex justify-center items-center md:justify-end"
       style={{ backgroundImage: `url(${loginImage})` }}
     >
-      <div className="border w-[70%] h-[60%] min-h-[32rem] min-w-[24rem] max-w-[28rem] md:w-[32%] md:h-[50%] md:min-h-[10rem] md:min-w-[10rem] md:max-w-[48rem] md:mr-15 backdrop-blur-sm border-white/70 rounded-xl flex flex-col justify-around shadow-2xl hover:scale-101 transition-all duration-300 hover:backdrop-blur-xl">
+      <div className="border w-[70%] h-[60%] min-h-[32rem] min-w-[24rem] max-w-[28rem] md:w-[32%] md:h-[50%] md:min-h-[10rem] md:min-w-[10rem] md:max-w-[48rem] md:mr-15 backdrop-blur-sm border-white/70 rounded-xl flex flex-col justify-around shadow-2xl hover:scale-101 transition-all duration-300 hover:backdrop-blur-xl hover:border-white/50">
         <div className="flex flex-col items-center justify-center gap-8 md:gap-6 md:mt-6 p-3 md:p-1 mt-3 md:mt-1">
           <p className="text-4xl md:text-3xl font-bold text-white text-shadow-lg">
             Login
@@ -63,7 +69,7 @@ const Login = () => {
                 onChange={inputHandler}
                 required
               />
-              <button type="button" className="absolute -translate-x-9 translate-y-2 md:-translate-x-7 md:translate-y-0 outline-none" onClick={showPassHandler}>🔑</button>
+              <button type="button" className="absolute -translate-x-9 translate-y-2 md:-translate-x-7 md:translate-y-1 outline-none" onClick={showPassHandler}>{showPass? <FaRegEyeSlash /> : <FaRegEye />}</button>
             </div>
             {/* <Link to="/dashboard"> */}
               <button type="submit"
