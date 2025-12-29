@@ -8,21 +8,30 @@ const NavItems = ({ path }) => {
   const location = useLocation();
   return (
     // <Link to={location.pathname.split("/")}>
-      {title: path}
+    { title: path }
     // </Link>
   );
 };
 
 const BreadcrumbComp = () => {
-  const { locationPaths } = useAuth();
+  const locationPath = useLocation();
+  // let locationPaths;
+  useEffect(() => {
+    console.log(locationPath.pathname)
+    // const calcPath = () => {
+    //   locationPaths = locationPath.split("/");
+    //   console.log(locationPath, locationPaths);
+    // };
+    // calcPath()
+  }, []);
   return (
     <div className="font-bold">
-    <Breadcrumb
-      items={locationPaths.map((path) => {
-        return { title: path };
-        // return <NavItems path={path} />;
-      })}
-    />
+      <Breadcrumb
+        items={locationPath.pathname.split("/").map((path) => {
+          return { title: path };
+          // return <NavItems path={path} />;
+        })}
+      />
     </div>
     // <NavItems path={'hello'} />
   );

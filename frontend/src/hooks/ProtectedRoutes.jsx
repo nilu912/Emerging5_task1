@@ -6,8 +6,7 @@ import { useAuth } from "../context/authContext.jsx";
 const ProtectedRoutes = () => {
   const { user } = useAuth();
 
-  if (!user) return <Navigate to="/login" replace />;
-  return <Outlet />;
+  return !user ? <Navigate to="/login" replace /> : <Outlet />;
 };
 
 export default ProtectedRoutes;

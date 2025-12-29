@@ -1,34 +1,30 @@
-import React, { Children } from "react";
+import React from "react";
 import { createContext, useContext, useState, useEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const AuthContext = createContext(null);
 export const useAuth = () => useContext(AuthContext);
 
 const AuthProvider = ({ children }) => {
-    const location = useLocation();
-    const navigator = useNavigate();
+  const navigator = useNavigate();
   const [user, setUser] = useState(null);
-  const [locationPaths, setLocationPaths] = useState([]);
 
   useEffect(() => {
-    const userData = localStorage.getItem("user");
-    console.log(userData);
-    setUser(JSON.parse(userData));
-    navigator("/dashboard");
+    try {
+      const userData = JSON.parse(localStorage.getItem("user"));
+      if (userData != null) {
+        console.log(userData);
+        setUser(userData);
+      }
+    } catch (e) {
+      console.error("Invalid user data in localStorage");
+      localStorage.removeItem("user");
+    }
+    // navigator("/dashboard");
   }, []);
-  useEffect(() => {
-    const getNavLocation = () => {
-      const pathItems = location.pathname.split("/");
-      pathItems.shift();
-      console.log(pathItems);
-      setLocationPaths(pathItems);
-    };
-    getNavLocation();
-  }, [location]);
 
   const login = (userData) => {
-    console.log(userData);
+    // console.log(userData);
     localStorage.setItem("user", JSON.stringify(userData));
     setUser(userData);
     navigator("/dashboard");
@@ -39,7 +35,7 @@ const AuthProvider = ({ children }) => {
     navigator("/login");
   };
   return (
-    <AuthContext.Provider value={{ user, login, logout, locationPaths }}>
+    <AuthContext.Provider value={{ user, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

@@ -25,6 +25,9 @@ import DashboardHome from "./dashboardPages/DashboardHome.jsx";
 import Users from "./dashboardPages/Users.jsx";
 import { useAuth } from "../context/authContext.jsx";
 import BreadcrumbComp from "../components/BreadcrumbComp.jsx";
+import { LuLogOut } from "react-icons/lu";
+import { MdFullscreenExit } from "react-icons/md";
+import { IoIosLock } from "react-icons/io";
 
 const items = [
   getItem("Dashboard", "/dashboard/", <PieChartOutlined />),
@@ -34,7 +37,7 @@ const items = [
     "/dashboard/copyright-insight",
     <DesktopOutlined />
   ),
-  getItem("System Master", "sub1", <UserOutlined />, [
+  getItem("System Master", "/system-master", <UserOutlined />, [
     getItem("User", "/dashboard/users"),
     getItem("Roles", "/dashboard/roles"),
   ]),
@@ -80,7 +83,9 @@ const Dashboard = () => {
           <div className="demo-logo-vertical" />
           <Menu
             theme="dark"
+            // defaultSelectedKeys={[location.pathname]}
             selectedKeys={[location.pathname]}
+            // selectedGroupKeys={[]}
             onClick={({ key }) => navigate(key)}
             mode="inline"
             items={items}
@@ -91,14 +96,26 @@ const Dashboard = () => {
             <p className="text-xl font-bold text-gray-800 min-w-[12rem] w-[16rem]">
               Welcome, {user.userName}
             </p>
-            <div className="hidden md:block w-full">
+            {/* <div className="hidden md:block w-full">
               <Navbar />
-            </div>
-            <div className="ml-auto">
+            </div> */}
+            <div className="ml-auto text-center">
               <Flex gap="small">
-                <Button danger onClick={logout}>
-                  Logout
-                </Button>
+                <div className="flex gap-3">
+                  {/* <Button danger onClick={logout}> */}
+                  <span className="text-lg">
+                    <MdFullscreenExit onClick={logout} />
+                  </span>
+                  <div className="border-r-2 border-gray-500"></div>
+                  <span className="text-lg">
+                    <IoIosLock onClick={logout} />
+                  </span>
+                  <div className="border-r-2 border-gray-500"></div>
+                  <span className="text-lg">
+                    <LuLogOut onClick={logout} />
+                  </span>
+                </div>
+                {/* </Button> */}
               </Flex>
             </div>
           </div>
@@ -121,11 +138,13 @@ const Dashboard = () => {
             <div className="h-16 border-b-2 border-gray-300 flex items-center justify-between">
               <BreadcrumbComp />
             </div>
-            <Routes>
-              <Route path="/" element={<DashboardHome />} />
-              <Route path="/users" element={<Users />} />
-              <Route path="*" element={<div>Page Not Found</div>} />
-            </Routes>
+            <div className="w-full bg-white min-h-[calc(100vh-200px)] overflow-hidden">
+              <Routes>
+                <Route index element={<DashboardHome />} />
+                <Route path="/users" element={<Users />} />
+                <Route path="*" element={<div>Page Not Found</div>} />
+              </Routes>
+            </div>
           </Content>
           <Footer style={{ textAlign: "center" }}>
             Ant Design ©{new Date().getFullYear()} Created by Ant UED

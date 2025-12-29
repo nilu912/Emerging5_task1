@@ -11,7 +11,7 @@ import { IoMdAdd } from "react-icons/io";
 import { data } from "../utils/userData.js";
 import DrawerComp from "./DrowerComp.jsx";
 import FilterModal from "../components/FilterModal.jsx";
-import * as XLSX from 'xlsx';
+import * as XLSX from "xlsx";
 
 const TableComp = () => {
   const [filteredInfo, setFilteredInfo] = useState({});
@@ -19,7 +19,47 @@ const TableComp = () => {
   const [open, setOpen] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
   const [selectEditData, setSelectEditData] = useState(null);
+  const [query, setQuery] = useState({ role: "All", type: "All" });
   const [arrow, setArrow] = useState("Show");
+  let { Search } = Input;
+  const [isLoading, setIsLoading] = useState(false);
+  const [filteredData, setFilteredData] = useState(data);
+  const [searchValue, setSearchValue] = useState("");
+  const updateData = (newData) => {
+    setFilteredData(newData);
+  };
+  const filterBySearchValue = async (e) => {
+    const value = e.target.value;
+    setSearchValue(value);
+    setIsLoading(true);
+    let res = data.filter((e) => {
+      return e.name.includes(value);
+    });
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    setFilteredData(res);
+    setIsLoading(false);
+  };
+  const setQueryHandler = (queryInp) => {
+    console.log(queryInp)
+    setQuery(queryInp);
+    // console.log("Query in table comp:", queryInp);
+  };
+
+  useEffect(() => {
+    const filterData = () => {
+      let filterUserData = data;
+      if (query.role != "All")
+        filterUserData = filterUserData.filter(
+          (item) => item.rollname === query.role
+        );
+      if (query.type != "All")
+        filterUserData = filterUserData.filter(
+          (item) => item.usertype === query.type
+        );
+      setFilteredData(filterUserData);
+    };
+    filterData();
+  }, [query]);
   const handleChange = (pagination, filters, sorter) => {
     console.log("Various parameters", pagination, filters, sorter);
     setFilteredInfo(filters);
@@ -61,7 +101,7 @@ const TableComp = () => {
     const worksheet = XLSX.utils.json_to_sheet(filteredData);
     XLSX.utils.book_append_sheet(workbook, worksheet, "Users");
     XLSX.writeFile(workbook, "UsersData.xlsx");
-  }
+  };
 
   const columns = [
     {
@@ -223,101 +263,87 @@ const TableComp = () => {
       ellipsis: true,
     },
   ];
-  let { Search } = Input;
-  const [isLoading, setIsLoading] = useState(false);
-  const [filteredData, setFilteredData] = useState(data);
-  const [searchValue, setSearchValue] = useState("");
-  const updateData = (newData) => {
-    setFilteredData(newData);
-  };
-  const filterBySearchValue = async (e) => {
-    const value = e.target.value;
-    setSearchValue(value);
-    setIsLoading(true);
-    let res = data.filter((e) => {
-      return e.name.includes(value);
-    });
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    setFilteredData(res);
-    setIsLoading(false);
-  };
   return (
     <>
-      <Space
-        style={{ marginBottom: 16 }}
-        className="flex justify-between w-full items-center"
-      >
-        <div className="flex flex-col md:flex-row gap-10 w-full mt-3 md:px-2 md:mt-2">
-          <div className="min-w-75 md:mr-8">
-            <Search
-              placeholder="input search loading with enterButton"
-              loading={isLoading}
-              enterButton
-              value={searchValue}
-              onChange={(e) => filterBySearchValue(e)}
+      <div className="h-auto w-full p-4 bg-white rounded-lg shadow-lg">
+        <div className="flex flex-col lg:flex-row justify-between w-full gap-1 lg:gap-4 mb-4">
+          <div className="flex flex-col xl:flex-row gap-2 xl:gap-10 w-full mt-3 md:px-2 md:mt-2">
+            <div className="min-w-10 md:min-w-75 md:mr-8">
+              <Search
+                placeholder="input search loading with enterButton"
+                loading={isLoading}
+                enterButton
+                value={searchValue}
+                onChange={(e) => filterBySearchValue(e)}
+              />
+            </div>
+            {/* <div className="flex gap-1 md:gap-2">
+              <Button onClick={clearFilters}>Clear filters</Button>
+              <Button onClick={clearAll}>Clear filters and sorters</Button>
+            </div> */}
+          </div>
+          <div className="flex wrap gap-2 md:ml-auto w-full mt-3 h-7 md:px-2 md:mt-2 text-sm md:text-md items-center md:justify-end">
+            <button className="bg-blue-900 text-white px-3 py-1 rounded-full">
+              <span className="flex items-center gap-2 justify-center">
+                <MdFormatLineSpacing />
+                Columns
+              </span>
+            </button>
+            <FilterModal
+              arrow={arrow}
+              setArrow={setArrow}
+              dataSet={filteredData}
+              filterByRoleValue={filterByRole}
+              filterByUserTypeValue={filterByUserType}
+              filterValues={setQueryHandler}
             />
-          </div>
-          <div className="flex md:gap-2">
-            {/* <Button onClick={setAgeSort}>Sort age</Button> */}
-            <Button onClick={clearFilters}>Clear filters</Button>
-            <Button onClick={clearAll}>Clear filters and sorters</Button>
-          </div>
-        </div>
-        <div className="flex gap-2 md:ml-auto w-full mt-3 md:px-2 md:mt-2">
-          <button className="bg-blue-900 text-white px-3 py-1 rounded-full">
-            <span className="flex items-center gap-2 justify-center">
-              <MdFormatLineSpacing />
-              Columns
-            </span>
-          </button>
-          <FilterModal
-            arrow={arrow}
-            setArrow={setArrow}
-            dataSet={filteredData}
-            filterByRole={filterByRole}
-            filterByUserType={filterByUserType}
-          />
 
-          {/* <button className="bg-blue-900 text-white px-3 py-1 rounded-full" onClick={()=> setFilterModelOpen(true)}>
+            {/* <button className="bg-blue-900 text-white px-3 py-1 rounded-full" onClick={()=> setFilterModelOpen(true)}>
             <span className="flex items-center gap-2 justify-center">
               <IoFilterSharp />
               Filter
             </span>
           </button> */}
-          <button className="bg-blue-900 text-white px-3 py-1 rounded-full" onClick={() => exportToExcel()}>
-            <span className="flex items-center gap-2 justify-center">
-              <PiMicrosoftExcelLogoFill />
-              Excel
-            </span>
-          </button>
-          <button
-            className="bg-blue-900 text-white px-3 py-1 rounded-full"
-            onClick={() => {
-              setOpen(true);
-              setIsEdit(false);
-              setSelectEditData(null);
-            }}
-          >
-            <span className="flex items-center gap-2 justify-center">
-              <IoMdAdd />
-              Add User
-            </span>
-          </button>
+            <button
+              className="bg-blue-900 text-white px-3 py-1 rounded-full"
+              onClick={() => exportToExcel()}
+            >
+              <span className="flex items-center gap-2 justify-center">
+                <PiMicrosoftExcelLogoFill />
+                Excel
+              </span>
+            </button>
+            <button
+              className="bg-blue-900 text-white px-3 py-1 rounded-full"
+              onClick={() => {
+                setOpen(true);
+                setIsEdit(false);
+                setSelectEditData(null);
+              }}
+            >
+              <span className="flex items-center gap-2 justify-center">
+                <IoMdAdd />
+                Add User
+              </span>
+            </button>
+          </div>
         </div>
-      </Space>
-      <Table
-        columns={columns}
-        dataSource={filteredData}
-        onChange={handleChange}
-        className="min-w-200"
-      />
-      <DrawerComp
-        open={open}
-        onClose={() => setOpen(false)}
-        isEdit={isEdit}
-        editData={selectEditData}
-        updateData={updateData}
-      />
+        <div className="overflow-x-auto">
+          <Table
+            columns={columns}
+            dataSource={filteredData}
+            onChange={handleChange}
+            scroll={{ x: "max-content", y: 400 }}
+          />
+        </div>
+        <DrawerComp
+          open={open}
+          onClose={() => setOpen(false)}
+          isEdit={isEdit}
+          editData={selectEditData}
+          updateData={updateData}
+        />
+      </div>
       {/* <FilterModal open={filterModelOpen} handleCancel={()=>setFilterModelOpen(false)}/> */}
     </>
   );

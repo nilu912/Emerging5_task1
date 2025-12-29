@@ -6,29 +6,25 @@ import { Radio, Select, Space } from "antd";
 const text = <span>Filter Option</span>;
 const buttonWidth = 80;
 
-const FilterModal = ({ arrow, setArrow, dataSet, filterByRole, filterByUserType }) => {
+const FilterModal = ({ arrow, setArrow, dataSet, filterValues }) => {
   // const [arrow, setArrow] = useState('Show');
   const [size, setSize] = useState("middle");
   const [roleOptions, setRoleOptions] = useState([]);
   const [userOptions, setUserOptions] = useState([]);
-  const handleSizeChange = (e) => {
-    setSize(e.target.value);
-  };
-
-  const handleChange = (value) => {
-    console.log(`Selected: ${value}`);
-    filterByRole(value);
-  };
+  const [values, setValues] = useState({
+    role: "All",
+    type: "All",
+  });
   useEffect(() => {
     const roles = new Set();
     const users = new Set();
     dataSet.forEach((item) => {
       roles.add(item.rollname);
-      users.add(item.usertype)
+      users.add(item.usertype);
     });
 
-    console.log(roles);
-    console.log(users);
+    // console.log(roles);
+    // console.log(users);
     const rolesOptions = Array.from(roles).map((role) => ({
       value: role,
       label: role,
@@ -52,43 +48,59 @@ const FilterModal = ({ arrow, setArrow, dataSet, filterByRole, filterByUserType 
       ...usersOptions,
     ]);
   }, []);
-
-  // for (let i = 10; i < 36; i++) {
-  //   options.push({
-  //     value: i.toString(36) + i,
-  //     label: i.toString(36) + i,
-  //   });
-  // }
+  const resetBtnHandler = () => {
+    const newValues = {
+      role: "All",
+      type: "All",
+    };
+    setValues(newValues);
+    filterValues(newValues);
+  };
   const content = (
-    <div>
-      <div>
-        <p className="">User Type</p>
+    <div className="border-t-2 pt-2 border-gray-300 flex flex-col gap-2">
+      <div className="flex gap-1 flex-col">
+        <p>User Type</p>
         <Space vertical style={{ width: "100%" }}>
           <Select
             size={size}
-            defaultValue="All"
-            onChange={filterByUserType}
+            defaultValue={values.type}
+            value={values.type}
+            onChange={(value) =>
+              setValues((prev) => ({ ...prev, type: value }))
+            }
             style={{ width: 200 }}
             options={userOptions}
           />
         </Space>
       </div>
-      <div>
-        <p className="">Role Name</p>
+      <div className="flex gap-1 flex-col">
+        <p>Role Name</p>
         <Space vertical style={{ width: "100%" }}>
           <Select
             size={size}
-            defaultValue="All"
-            onChange={handleChange}
+            defaultValue={values.role}
+            value={values.role}
+            onChange={(value) =>
+              setValues((prev) => ({ ...prev, role: value }))
+            }
             style={{ width: 200 }}
             options={roleOptions}
           />
-          {/* <Radio.Group value={size} onChange={handleSizeChange}>
-          <Radio.Button value="large">Large</Radio.Button>
-          <Radio.Button value="middle">Default</Radio.Button>
-          <Radio.Button value="small">Small</Radio.Button>
-        </Radio.Group> */}
         </Space>
+      </div>
+      <div className="flex gap-1 flex-row justify-end">
+        <button
+          className="px-5 py-1 border border-blue-800 rounded"
+          onClick={() => resetBtnHandler()}
+        >
+          Reset
+        </button>
+        <button
+          className="px-5 py-1 border bg-blue-800 text-white rounded"
+          onClick={() => filterValues(values)}
+        >
+          Ok
+        </button>
       </div>
     </div>
   );
@@ -118,7 +130,7 @@ const FilterModal = ({ arrow, setArrow, dataSet, filterByRole, filterByUserType 
             title={text}
             content={content}
             arrow={mergedArrow}
-            trigger="hover"
+            trigger="click"
           >
             <button className="bg-blue-900 text-white px-3 py-1 rounded-full">
               <span className="flex items-center gap-2 justify-center">
