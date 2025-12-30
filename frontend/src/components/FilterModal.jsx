@@ -2,8 +2,10 @@ import React, { useMemo, useState, useEffect } from "react";
 import { Button, ConfigProvider, Flex, Popover, Segmented } from "antd";
 import { IoFilterSharp } from "react-icons/io5";
 import { Radio, Select, Space } from "antd";
+import { RiResetLeftFill } from "react-icons/ri";
+import { IoMdSearch } from "react-icons/io";
 
-const text = <span>Filter Option</span>;
+const text = <span className="font-bold text-blue-900">Filter Option</span>;
 const buttonWidth = 80;
 
 const FilterModal = ({ arrow, setArrow, dataSet, filterValues, queryVal }) => {
@@ -65,6 +67,9 @@ const FilterModal = ({ arrow, setArrow, dataSet, filterValues, queryVal }) => {
         <p>User Type</p>
         <Space vertical style={{ width: "100%" }}>
           <Select
+            showSearch={{
+              optionFilterProp: ["label", "otherField"],
+            }}
             size={size}
             defaultValue={values.type}
             value={values.type}
@@ -80,6 +85,9 @@ const FilterModal = ({ arrow, setArrow, dataSet, filterValues, queryVal }) => {
         <p>Role Name</p>
         <Space vertical style={{ width: "100%" }}>
           <Select
+            showSearch={{
+              optionFilterProp: ["label", "otherField"],
+            }}
             size={size}
             defaultValue={values.role}
             value={values.role}
@@ -93,16 +101,18 @@ const FilterModal = ({ arrow, setArrow, dataSet, filterValues, queryVal }) => {
       </div>
       <div className="flex gap-1 flex-row justify-end">
         <button
-          className="px-5 py-1 border border-blue-800 rounded"
+          className="px-3 py-1 border border-blue-800 rounded flex flex-wrap justify-center items-center gap-1"
           onClick={() => resetBtnHandler()}
         >
+          <RiResetLeftFill size={14} className="translate-y-[1px]" />
           Reset
         </button>
         <button
-          className="px-5 py-1 border bg-blue-800 text-white rounded"
+          className="px-3 py-1 border bg-blue-800 text-white rounded flex flex-wrap justify-center items-center gap-1"
           onClick={() => filterValues(values)}
         >
-          Ok
+          <IoMdSearch size={16} className="translate-y-[1px]" />
+          Search
         </button>
       </div>
     </div>
@@ -135,7 +145,7 @@ const FilterModal = ({ arrow, setArrow, dataSet, filterValues, queryVal }) => {
             arrow={mergedArrow}
             trigger="click"
           >
-            <button className="bg-blue-900 text-white px-3 py-1 border rounded-full cursor-pointer">
+            <button className="bg-blue-900 text-white px-3 py-1 border rounded-full cursor-pointer hover:shadow-2xl hover:bg-blue-800 transition-all duration-300">
               <span className="flex items-center gap-2 h-5 w-5 sm:h-auto sm:w-auto justify-center">
                 <IoFilterSharp />
                 <div className="hidden sm:block">

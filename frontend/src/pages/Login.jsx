@@ -83,7 +83,7 @@ const Login = () => {
             {/* <Link to="/dashboard"> */}
             <button
               type="submit"
-              className="w-full h-14 md:h-9 bg-blue-700 text-white rounded-lg text-shadow-lg border border-white/70 border-2 mt-4 md:mt-2 font-bold text-lg md:text-sm hover:bg-blue-700 hover:scale-101 hover:bg-blue-800 transition-all duration-300 shadow-xl"
+              className="w-full h-14 md:h-9 bg-blue-700 text-white rounded-lg text-shadow-lg border border-white/70 border-2 mt-4 md:mt-2 font-bold text-lg md:text-sm hover:bg-blue-700 hover:scale-101 hover:bg-blue-800 transition-all duration-300 shadow-xl cursor-pointer"
             >
               Login
             </button>

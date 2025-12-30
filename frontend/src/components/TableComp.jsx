@@ -3,7 +3,7 @@ import { Button, Space, Table } from "antd";
 import { FaEdit } from "react-icons/fa";
 import { MdDeleteForever } from "react-icons/md";
 import { FaKey } from "react-icons/fa";
-import { Input } from "antd";
+import { ConfigProvider, Input } from "antd";
 import { IoFilterSharp } from "react-icons/io5";
 import { MdFormatLineSpacing } from "react-icons/md";
 import { PiMicrosoftExcelLogoFill } from "react-icons/pi";
@@ -16,6 +16,7 @@ import { useAuth } from "../context/authContext.jsx";
 
 const TableComp = ({ dataSet }) => {
   const { setIsLoading, isLoading } = useAuth();
+  const [searchLoading, setSearchLoading] = useState(false);
   const [filteredInfo, setFilteredInfo] = useState({});
   const [sortedInfo, setSortedInfo] = useState({});
   const [open, setOpen] = useState(false);
@@ -32,13 +33,13 @@ const TableComp = ({ dataSet }) => {
   const filterBySearchValue = async (e) => {
     const value = e.target.value;
     setSearchValue(value);
-    setIsLoading(true);
+    setSearchLoading(true);
     let res = dataSet.filter((e) => {
       return e.name.includes(value);
     });
     await new Promise((resolve) => setTimeout(resolve, 1000));
     setFilteredData(res);
-    setIsLoading(false);
+    setSearchLoading(false);
   };
   const setQueryHandler = (queryInp) => {
     console.log(queryInp);
@@ -124,6 +125,7 @@ const TableComp = ({ dataSet }) => {
         return (
           <div className="flex gap-3 text-md">
             <button
+              className="cursor-pointer hover:text-blue-900 transition-all duration-300"
               onClick={() => {
                 setOpen(true);
                 setIsEdit(true);
@@ -132,8 +134,8 @@ const TableComp = ({ dataSet }) => {
             >
               <FaEdit />
             </button>
-            <MdDeleteForever />
-            <FaKey />
+            <MdDeleteForever className="cursor-pointer hover:text-blue-900 transition-all duration-300" />
+            <FaKey className="cursor-pointer hover:text-blue-900 transition-all duration-300" />
           </div>
         );
       },
@@ -144,15 +146,23 @@ const TableComp = ({ dataSet }) => {
       dataIndex: "active",
       key: "active",
       width: 110,
-      filters: [
-        { text: "True", value: "true" },
-        { text: "False", value: "false" },
-      ],
+      // filters: [
+      //   { text: "True", value: "true" },
+      //   { text: "False", value: "false" },
+      // ],
       render: (value) =>
         value ? (
-          <Button color="primary" variant="outlined">
-            True
-          </Button>
+          <ConfigProvider
+            theme={{
+              token: {
+                colorPrimary: "#1c398e",
+              },
+            }}
+          >
+            <Button color="primary" variant="outlined">
+              True
+            </Button>
+          </ConfigProvider>
         ) : (
           <Button color="danger" variant="outlined">
             False
@@ -169,10 +179,10 @@ const TableComp = ({ dataSet }) => {
       dataIndex: "usertype",
       key: "usertype",
       width: 130,
-      filters: [
-        { text: "Internal", value: "Internal" },
-        { text: "External", value: "External" },
-      ],
+      // filters: [
+      //   { text: "Internal", value: "Internal" },
+      //   { text: "External", value: "External" },
+      // ],
       filteredValue: filteredInfo.usertype || null,
       onFilter: (value, record) => record.usertype.includes(value),
       sorter: (a, b) => a.usertype.localeCompare(b.usertype),
@@ -184,10 +194,10 @@ const TableComp = ({ dataSet }) => {
       dataIndex: "name",
       width: 140,
       key: "name",
-      filters: [
-        { text: "Joe", value: "Joe" },
-        { text: "Jim", value: "Jim" },
-      ],
+      // filters: [
+      //   { text: "Joe", value: "Joe" },
+      //   { text: "Jim", value: "Jim" },
+      // ],
       filteredValue: filteredInfo.name || null,
       onFilter: (value, record) => record.name.includes(value),
       sorter: (a, b) => a.name.localeCompare(b.name),
@@ -199,10 +209,10 @@ const TableComp = ({ dataSet }) => {
       dataIndex: "clientname",
       key: "clientname",
       width: 150,
-      filters: [
-        { text: "Joe", value: "Joe" },
-        { text: "Jim", value: "Jim" },
-      ],
+      // filters: [
+      //   { text: "Joe", value: "Joe" },
+      //   { text: "Jim", value: "Jim" },
+      // ],
       filteredValue: filteredInfo.clientname || null,
       onFilter: (value, record) => record.clientname.includes(value),
       sorter: (a, b) => a.clientname.length - b.clientname.length,
@@ -258,10 +268,10 @@ const TableComp = ({ dataSet }) => {
       title: "Address",
       dataIndex: "address",
       key: "address",
-      filters: [
-        { text: "London", value: "London" },
-        { text: "New York", value: "New York" },
-      ],
+      // filters: [
+      //   { text: "London", value: "London" },
+      //   { text: "New York", value: "New York" },
+      // ],
       filteredValue: filteredInfo.address || null,
       onFilter: (value, record) => record.address.includes(value),
       sorter: (a, b) => a.address.localeCompare(b.address),
@@ -275,13 +285,28 @@ const TableComp = ({ dataSet }) => {
         <div className="flex flex-col lg:flex-row justify-between w-full gap-1 lg:gap-4 mb-4">
           <div className="flex flex-col xl:flex-row gap-2 xl:gap-10 w-full mt-3 md:px-2 md:mt-2">
             <div className="min-w-10 sm:w-90 md:min-w-75 md:mr-8">
-              <Search
-                placeholder="input search loading with enterButton"
-                loading={isLoading}
-                enterButton
-                value={searchValue}
-                onChange={(e) => filterBySearchValue(e)}
-              />
+              <ConfigProvider
+                theme={{
+                  components: {
+                    Input: {
+                      activeBorderColor: "#1c398e",
+                      hoverBorderColor: "#1c398e",
+                      colorTextPlaceholder: "#94a3b8",
+                    },
+                  },
+                  token: {
+                    colorPrimary: "#1c398e", // affects search icon
+                  },
+                }}
+              >
+                <Search
+                  placeholder="Enter username to search"
+                  loading={searchLoading}
+                  enterButton
+                  value={searchValue}
+                  onChange={(e) => filterBySearchValue(e)}
+                />
+              </ConfigProvider>
             </div>
             {/* <div className="flex gap-1 md:gap-2">
               <Button onClick={clearFilters}>Clear filters</Button>
