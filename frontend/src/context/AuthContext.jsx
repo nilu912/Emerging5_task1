@@ -1,4 +1,4 @@
-import React from "react";
+import React, { use } from "react";
 import { createContext, useContext, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -8,6 +8,7 @@ export const useAuth = () => useContext(AuthContext);
 const AuthProvider = ({ children }) => {
   const navigator = useNavigate();
   const [user, setUser] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     try {
@@ -19,6 +20,8 @@ const AuthProvider = ({ children }) => {
     } catch (e) {
       console.error("Invalid user data in localStorage");
       localStorage.removeItem("user");
+    } finally {
+      setIsLoading(false);
     }
     // navigator("/dashboard");
   }, []);
@@ -35,7 +38,9 @@ const AuthProvider = ({ children }) => {
     navigator("/login");
   };
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider
+      value={{ user, login, logout, isLoading, setIsLoading }}
+    >
       {children}
     </AuthContext.Provider>
   );

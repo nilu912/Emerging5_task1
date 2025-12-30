@@ -6,7 +6,7 @@ import { Radio, Select, Space } from "antd";
 const text = <span>Filter Option</span>;
 const buttonWidth = 80;
 
-const FilterModal = ({ arrow, setArrow, dataSet, filterValues }) => {
+const FilterModal = ({ arrow, setArrow, dataSet, filterValues, queryVal }) => {
   // const [arrow, setArrow] = useState('Show');
   const [size, setSize] = useState("middle");
   const [roleOptions, setRoleOptions] = useState([]);
@@ -15,6 +15,9 @@ const FilterModal = ({ arrow, setArrow, dataSet, filterValues }) => {
     role: "All",
     type: "All",
   });
+  useEffect(() => {
+    setValues(queryVal);
+  }, [queryVal]);
   useEffect(() => {
     const roles = new Set();
     const users = new Set();
@@ -132,10 +135,12 @@ const FilterModal = ({ arrow, setArrow, dataSet, filterValues }) => {
             arrow={mergedArrow}
             trigger="click"
           >
-            <button className="bg-blue-900 text-white px-3 py-1 rounded-full">
-              <span className="flex items-center gap-2 justify-center">
+            <button className="bg-blue-900 text-white px-3 py-1 border rounded-full cursor-pointer">
+              <span className="flex items-center gap-2 h-5 w-5 sm:h-auto sm:w-auto justify-center">
                 <IoFilterSharp />
-                Filter
+                <div className="hidden sm:block">
+                  <p className="whitespace-nowrap">Filter</p>
+                </div>
               </span>
             </button>
           </Popover>

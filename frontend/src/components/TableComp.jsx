@@ -8,12 +8,14 @@ import { IoFilterSharp } from "react-icons/io5";
 import { MdFormatLineSpacing } from "react-icons/md";
 import { PiMicrosoftExcelLogoFill } from "react-icons/pi";
 import { IoMdAdd } from "react-icons/io";
-import { data } from "../utils/userData.js";
+// import { data } from "../utils/userData.js";
 import DrawerComp from "./DrowerComp.jsx";
 import FilterModal from "../components/FilterModal.jsx";
 import * as XLSX from "xlsx";
+import { useAuth } from "../context/authContext.jsx";
 
-const TableComp = () => {
+const TableComp = ({ dataSet }) => {
+  const { setIsLoading, isLoading } = useAuth();
   const [filteredInfo, setFilteredInfo] = useState({});
   const [sortedInfo, setSortedInfo] = useState({});
   const [open, setOpen] = useState(false);
@@ -22,8 +24,7 @@ const TableComp = () => {
   const [query, setQuery] = useState({ role: "All", type: "All" });
   const [arrow, setArrow] = useState("Show");
   let { Search } = Input;
-  const [isLoading, setIsLoading] = useState(false);
-  const [filteredData, setFilteredData] = useState(data);
+  const [filteredData, setFilteredData] = useState([]);
   const [searchValue, setSearchValue] = useState("");
   const updateData = (newData) => {
     setFilteredData(newData);
@@ -32,7 +33,7 @@ const TableComp = () => {
     const value = e.target.value;
     setSearchValue(value);
     setIsLoading(true);
-    let res = data.filter((e) => {
+    let res = dataSet.filter((e) => {
       return e.name.includes(value);
     });
     await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -40,26 +41,31 @@ const TableComp = () => {
     setIsLoading(false);
   };
   const setQueryHandler = (queryInp) => {
-    console.log(queryInp)
+    console.log(queryInp);
     setQuery(queryInp);
     // console.log("Query in table comp:", queryInp);
   };
-
   useEffect(() => {
-    const filterData = () => {
-      let filterUserData = data;
-      if (query.role != "All")
-        filterUserData = filterUserData.filter(
-          (item) => item.rollname === query.role
-        );
-      if (query.type != "All")
-        filterUserData = filterUserData.filter(
-          (item) => item.usertype === query.type
-        );
-      setFilteredData(filterUserData);
-    };
-    filterData();
-  }, [query]);
+    setIsLoading(true);
+    setFilteredData(dataSet);
+    setIsLoading(false);
+  }, [dataSet]);
+
+  // useEffect(() => {
+  //   const filterData = () => {
+  //     let filterUserData = data;
+  //     if (query.role != "All")
+  //       filterUserData = filterUserData.filter(
+  //         (item) => item.rollname === query.role
+  //       );
+  //     if (query.type != "All")
+  //       filterUserData = filterUserData.filter(
+  //         (item) => item.usertype === query.type
+  //       );
+  //     setFilteredData(filterUserData);
+  //   };
+  //   filterData();
+  // }, [query]);
   const handleChange = (pagination, filters, sorter) => {
     console.log("Various parameters", pagination, filters, sorter);
     setFilteredInfo(filters);
@@ -69,7 +75,7 @@ const TableComp = () => {
     setFilteredInfo({});
   };
   const clearAll = () => {
-    setFilteredData(data);
+    setFilteredData(dataSet);
     setSearchValue("");
     setFilteredInfo({});
     setSortedInfo({});
@@ -82,18 +88,18 @@ const TableComp = () => {
   };
   const filterByRole = (role) => {
     if (role === "All") {
-      setFilteredData(data);
+      setFilteredData(dataSet);
       return;
     }
-    const filteredData = data.filter((item) => item.rollname === role);
+    const filteredData = dataSet.filter((item) => item.rollname === role);
     setFilteredData(filteredData);
   };
   const filterByUserType = (userType) => {
     if (userType === "All") {
-      setFilteredData(data);
+      setFilteredData(dataSet);
       return;
     }
-    const filteredData = data.filter((item) => item.usertype === userType);
+    const filteredData = dataSet.filter((item) => item.usertype === userType);
     setFilteredData(filteredData);
   };
   const exportToExcel = () => {
@@ -268,7 +274,7 @@ const TableComp = () => {
       <div className="h-auto w-full p-4 bg-white rounded-lg shadow-lg">
         <div className="flex flex-col lg:flex-row justify-between w-full gap-1 lg:gap-4 mb-4">
           <div className="flex flex-col xl:flex-row gap-2 xl:gap-10 w-full mt-3 md:px-2 md:mt-2">
-            <div className="min-w-10 md:min-w-75 md:mr-8">
+            <div className="min-w-10 sm:w-90 md:min-w-75 md:mr-8">
               <Search
                 placeholder="input search loading with enterButton"
                 loading={isLoading}
@@ -282,7 +288,7 @@ const TableComp = () => {
               <Button onClick={clearAll}>Clear filters and sorters</Button>
             </div> */}
           </div>
-          <div className="flex wrap gap-2 md:ml-auto w-full mt-3 h-7 md:px-2 md:mt-2 text-sm md:text-md items-center md:justify-end">
+          {/* <div className="flex wrap gap-2 md:ml-auto w-full mt-3 h-7 md:px-2 md:mt-2 text-sm md:text-md items-center md:justify-end">
             <button className="bg-blue-900 text-white px-3 py-1 rounded-full">
               <span className="flex items-center gap-2 justify-center">
                 <MdFormatLineSpacing />
@@ -298,12 +304,6 @@ const TableComp = () => {
               filterValues={setQueryHandler}
             />
 
-            {/* <button className="bg-blue-900 text-white px-3 py-1 rounded-full" onClick={()=> setFilterModelOpen(true)}>
-            <span className="flex items-center gap-2 justify-center">
-              <IoFilterSharp />
-              Filter
-            </span>
-          </button> */}
             <button
               className="bg-blue-900 text-white px-3 py-1 rounded-full"
               onClick={() => exportToExcel()}
@@ -326,7 +326,7 @@ const TableComp = () => {
                 Add User
               </span>
             </button>
-          </div>
+          </div> */}
         </div>
         <div className="overflow-x-auto">
           <Table

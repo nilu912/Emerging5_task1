@@ -4,8 +4,9 @@ import { useAuth } from "../context/authContext.jsx";
 
 // in this childrens not defined error come
 const ProtectedRoutes = () => {
-  const { user } = useAuth();
+  const { user, isLoading } = useAuth();
 
+  if(isLoading){ return <div>Loading...</div> }
   return !user ? <Navigate to="/login" replace /> : <Outlet />;
 };
 

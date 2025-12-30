@@ -25,8 +25,8 @@ const BreadcrumbComp = () => {
     // calcPath()
   }, []);
   return (
-    <div className="font-bold">
-      <Breadcrumb
+    <div className="font-bold text-lg">
+      <Breadcrumb style={{fontSize: "15px"}}
         items={locationPath.pathname.split("/").map((path) => {
           return { title: path };
           // return <NavItems path={path} />;

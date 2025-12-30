@@ -6,6 +6,7 @@ const DrawerComp = ({ open, onClose, isEdit ,editData }) => {
   const [form] = Form.useForm();
 
   useEffect(() => {
+    if(!open) return;
     if(isEdit){
       form.setFieldsValue(editData);
     } else{

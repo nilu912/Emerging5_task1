@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   DesktopOutlined,
   FileOutlined,
@@ -28,6 +28,13 @@ import BreadcrumbComp from "../components/BreadcrumbComp.jsx";
 import { LuLogOut } from "react-icons/lu";
 import { MdFullscreenExit } from "react-icons/md";
 import { IoIosLock } from "react-icons/io";
+import { MdFormatLineSpacing } from "react-icons/md";
+import FilterModal from "../components/FilterModal.jsx";
+import { data } from "../utils/userData.js";
+import { PiMicrosoftExcelLogoFill } from "react-icons/pi";
+import { IoMdAdd } from "react-icons/io";
+import DrawerComp from "../components/DrowerComp.jsx";
+import { IoCloseOutline } from "react-icons/io5";
 
 const items = [
   getItem("Dashboard", "/dashboard/", <PieChartOutlined />),
@@ -48,13 +55,70 @@ const items = [
   getItem("Files", "9", <FileOutlined />),
 ];
 const Dashboard = () => {
-  const { user, logout } = useAuth();
+  const { user, logout, isLoading, setIsLoading } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const [collapsed, setCollapsed] = useState(false);
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
+  const [arrow, setArrow] = useState("Show");
+  const [filteredData, setFilteredData] = useState([]);
+  const [query, setQuery] = useState({ role: "All", type: "All" });
+  const [isEdit, setIsEdit] = useState(false);
+  const [selectEditData, setSelectEditData] = useState(null);
+  const updateData = (newData) => {
+    setFilteredData(newData);
+  };
+  const [open, setOpen] = useState(false);
+
+  const filterByRole = (role) => {
+    if (role === "All") {
+      setFilteredData(data);
+      return;
+    }
+    const filteredData = data.filter((item) => item.rollname === role);
+    setFilteredData(filteredData);
+  };
+  const filterByUserType = (userType) => {
+    if (userType === "All") {
+      setFilteredData(data);
+      return;
+    }
+    const filteredData = data.filter((item) => item.usertype === userType);
+    setFilteredData(filteredData);
+  };
+  const exportToExcel = () => {
+    const workbook = XLSX.utils.book_new();
+    const worksheet = XLSX.utils.json_to_sheet(filteredData);
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Users");
+    XLSX.writeFile(workbook, "UsersData.xlsx");
+  };
+  const setQueryHandler = (queryInp) => {
+    console.log(queryInp);
+    setQuery(queryInp);
+    // console.log("Query in table comp:", queryInp);
+  };
+  useEffect(() => {
+    setIsLoading(true);
+    const filterData = () => {
+      let filterUserData = data;
+      if (query.role != "All")
+        filterUserData = filterUserData.filter(
+          (item) => item.rollname === query.role
+        );
+      if (query.type != "All")
+        filterUserData = filterUserData.filter(
+          (item) => item.usertype === query.type
+        );
+      setFilteredData(filterUserData);
+    };
+    filterData();
+    setIsLoading(false);
+  }, [query]);
+
+  if (isLoading) return <div>Loading...</div>;
+
   return (
     <>
       <Layout style={{ minHeight: "100vh" }}>
@@ -103,15 +167,15 @@ const Dashboard = () => {
               <Flex gap="small">
                 <div className="flex gap-3">
                   {/* <Button danger onClick={logout}> */}
-                  <span className="text-lg">
+                  <span className="text-lg cursor-pointer">
                     <MdFullscreenExit onClick={logout} />
                   </span>
                   <div className="border-r-2 border-gray-500"></div>
-                  <span className="text-lg">
+                  <span className="text-lg cursor-pointer">
                     <IoIosLock onClick={logout} />
                   </span>
                   <div className="border-r-2 border-gray-500"></div>
-                  <span className="text-lg">
+                  <span className="text-lg cursor-pointer">
                     <LuLogOut onClick={logout} />
                   </span>
                 </div>
@@ -135,15 +199,97 @@ const Dashboard = () => {
             >
               Bill is a cat.
             </div> */}
-            <div className="h-16 border-b-2 border-gray-300 flex items-center justify-between">
-              <BreadcrumbComp />
+            <div className="h-auto lg:h-21 gap-2 lg:gap-0 py-2 md:py-2 border-gray-300 flex items-start justify-center lg:items-start flex-col lg:flex-row">
+              <div className="w-auto md:min-w-[24rem] lg:px-2 flex flex-col gap-3 h-auto">
+                <BreadcrumbComp />
+                <div className="flex gap-2">
+                  {query.type && query.type != "All" && (
+                    <div className="w-auto border border-gray-500 flex bg-gray-200 rounded-full px-3 py-1 gap-2 items-center justify-start">
+                      <p className="whitespace-nowrap">
+                        User Type:{" "}
+                        <span className="text-blue-900">{query.type}</span>
+                      </p>
+                      <button className="translate-y-[1px] cursor-pointer" onClick={() => {setQuery(pre => ({ ...pre, type: "All" }))}}>
+                        <IoCloseOutline size={18} />
+                      </button>
+                    </div>
+                  )}
+                  {query.role && query.role != "All" && (
+                    <div className=" w-auto border border-gray-500 flex bg-gray-200 rounded-full px-3 py-1 gap-2 items-center justify-start">
+                      <p className="whitespace-nowrap">
+                        User Role:{" "}
+                        <span className="text-blue-900">{query.role}</span>
+                      </p>
+                      <button className="translate-y-[1px] cursor-pointer" onClick={() => setQuery(pre => ({ ...pre, role: "All" }))}>
+                        <IoCloseOutline size={18} />
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </div>
+              <div className="flex wrap gap-2 lg:ml-auto w-full h-7 lg:px-2 text-sm lg:text-md items-center justify-start lg:justify-end">
+                <button className="bg-blue-900 text-white px-3 py-1 rounded-full cursor-pointer">
+                  <span className="flex items-center gap-2 h-5 w-5 sm:h-auto sm:w-auto justify-center">
+                    <MdFormatLineSpacing />
+                    <div className="hidden sm:block">
+                      <p className="whitespace-nowrap">Columns</p>
+                    </div>
+                  </span>
+                </button>
+                <FilterModal
+                  arrow={arrow}
+                  setArrow={setArrow}
+                  dataSet={data}
+                  filterByRoleValue={filterByRole}
+                  filterByUserTypeValue={filterByUserType}
+                  filterValues={setQueryHandler}
+                  queryVal={query}
+                />
+
+                <button
+                  className="bg-blue-900 text-white px-3 py-1 rounded-full cursor-pointer"
+                  onClick={() => exportToExcel()}
+                >
+                  <span className="flex items-center gap-2 h-5 w-5 sm:h-auto sm:w-auto justify-center">
+                    <PiMicrosoftExcelLogoFill />
+                    <div className="hidden sm:block">
+                      <p className="whitespace-nowrap">Excel</p>
+                    </div>
+                  </span>
+                </button>
+                <button
+                  className="bg-blue-900 text-white px-3 py-1 rounded-full cursor-pointer"
+                  onClick={() => {
+                    setOpen(true);
+                    setIsEdit(false);
+                    setSelectEditData(null);
+                  }}
+                >
+                  <span className="flex items-center gap-2 h-5 w-5 sm:h-auto sm:w-auto justify-center">
+                    <IoMdAdd />
+                    <div className="hidden sm:block">
+                      <p className="whitespace-nowrap">Add User</p>
+                    </div>
+                  </span>
+                </button>
+              </div>
             </div>
-            <div className="w-full bg-white min-h-[calc(100vh-200px)] overflow-hidden">
+            <div className="w-full bg-gray-100 min-h-[calc(100vh-200px)] overflow-hidden">
               <Routes>
                 <Route index element={<DashboardHome />} />
-                <Route path="/users" element={<Users />} />
+                <Route
+                  path="/users"
+                  element={<Users dataSet={filteredData} />}
+                />
                 <Route path="*" element={<div>Page Not Found</div>} />
               </Routes>
+              <DrawerComp
+                open={open}
+                onClose={() => setOpen(false)}
+                isEdit={isEdit}
+                editData={selectEditData}
+                updateData={updateData}
+              />
             </div>
           </Content>
           <Footer style={{ textAlign: "center" }}>

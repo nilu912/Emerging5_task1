@@ -3,7 +3,7 @@ import React from "react";
 const DashboardHome = () => {
   return (
     <div>
-      <p className="text-blue-800 flex gap-1">DashboardHome</p>
+      <p className="text-blue-800flex gap-1">DashboardHome</p>
     </div>
   );
 };
