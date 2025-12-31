@@ -159,12 +159,12 @@ const TableComp = ({ dataSet }) => {
               },
             }}
           >
-            <Button color="primary" variant="outlined">
+            <Button color="primary" variant="outlined" size="small">
               True
             </Button>
           </ConfigProvider>
         ) : (
-          <Button color="danger" variant="outlined">
+          <Button color="danger" variant="outlined" size="small">
             False
           </Button>
         ),
@@ -359,6 +359,7 @@ const TableComp = ({ dataSet }) => {
             dataSource={filteredData}
             onChange={handleChange}
             scroll={{ x: "max-content", y: 400 }}
+            size="small"
           />
         </div>
         <DrawerComp

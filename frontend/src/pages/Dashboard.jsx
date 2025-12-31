@@ -40,7 +40,7 @@ import { FaUser } from "react-icons/fa";
 import SidebarDrawer from "../components/SidebarDrawer.jsx";
 import { MdKeyboardDoubleArrowRight } from "react-icons/md";
 import { MdKeyboardArrowRight } from "react-icons/md";
-
+import * as XLSX from "xlsx";
 
 const items = [
   getItem("Dashboard", "/dashboard/", <PieChartOutlined />),
@@ -96,11 +96,13 @@ const Dashboard = () => {
     const filteredData = data.filter((item) => item.usertype === userType);
     setFilteredData(filteredData);
   };
-  const exportToExcel = () => {
+  const exportToExcel = async () => {
+    setIsLoading(true);
     const workbook = XLSX.utils.book_new();
     const worksheet = XLSX.utils.json_to_sheet(filteredData);
     XLSX.utils.book_append_sheet(workbook, worksheet, "Users");
-    XLSX.writeFile(workbook, "UsersData.xlsx");
+    await XLSX.writeFile(workbook, "UsersData.xlsx");
+    setIsLoading(false);
   };
   const setQueryHandler = (queryInp) => {
     console.log(queryInp);
@@ -108,6 +110,7 @@ const Dashboard = () => {
     // console.log("Query in table comp:", queryInp);
   };
   useEffect(() => {
+    setIsLoading(true);
     if (
       location.pathname.startsWith("/dashboard/users") ||
       location.pathname.startsWith("/dashboard/roles")
@@ -116,6 +119,7 @@ const Dashboard = () => {
     } else {
       setOpenKeys([]);
     }
+    setIsLoading(false);
   }, [location.pathname]);
   useEffect(() => {
     setIsLoading(true);
@@ -159,7 +163,7 @@ const Dashboard = () => {
             <MdKeyboardDoubleArrowRight className="text-lg" />
           </button>
         )}
-  
+
         <SidebarDrawer open={sliderOpen} setOpen={setSliderOpen} />
       </div>
 
@@ -273,27 +277,29 @@ const Dashboard = () => {
                   <div className="flex gap-2 flex-wrap items-center px-2 mr-20 ">
                     <FaUser className="" />
                     <div className="flex  items-center py-1 items-center rounded-md">
-                    {location.pathname
-                      .split("/")
-                      .filter(Boolean)
-                      .map((path, index, arr) => (
-                        <Link key={index} to={`/${path}`}>
-                          <p className="text-md text-black font-bold">
-                            {path.toLocaleUpperCase()}
-                            {index < arr.length - 1 && (
-                              <MdKeyboardArrowRight className="inline h-5 w-5 -translate-y-[1px]" />
-                            )}
-                          </p>
-                        </Link>
-                      ))}
-                      </div>
+                      {location.pathname
+                        .split("/")
+                        .filter(Boolean)
+                        .map((path, index, arr) => (
+                          <Link key={index} to={`/${path}`}>
+                            <p className="text-md text-black font-bold">
+                              {path.toLocaleUpperCase()}
+                              {index < arr.length - 1 && (
+                                <MdKeyboardArrowRight className="inline h-5 w-5 -translate-y-[1px]" />
+                              )}
+                            </p>
+                          </Link>
+                        ))}
+                    </div>
                   </div>
                   <div className="flex gap-2">
                     {query.type && query.type != "All" && (
                       <div className="w-auto border border-gray-500 flex bg-gray-200 rounded-full px-3 py-[2px] gap-2 items-center justify-start">
                         <p className="whitespace-nowrap">
                           User Type:{" "}
-                          <span className="text-blue-900 font-bold">{query.type}</span>
+                          <span className="text-blue-900 font-bold">
+                            {query.type}
+                          </span>
                         </p>
                         <button
                           className="translate-y-[1px] cursor-pointer"
@@ -309,7 +315,9 @@ const Dashboard = () => {
                       <div className=" w-auto border border-gray-500 flex bg-gray-200 rounded-full px-3 py-[2px] gap-2 items-center justify-start">
                         <p className="whitespace-nowrap">
                           User Role:{" "}
-                          <span className="text-blue-900 font-bold">{query.role}</span>
+                          <span className="text-blue-900 font-bold">
+                            {query.role}
+                          </span>
                         </p>
                         <button
                           className="translate-y-[1px] cursor-pointer"
