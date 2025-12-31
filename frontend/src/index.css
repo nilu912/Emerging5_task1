@@ -1,1 +1,75 @@
 @import "tailwindcss";
+
+/* Sidebar background */
+.ant-layout-sider {
+  @apply bg-slate-50 border-r border-gray-200;
+}
+
+/* Menu base */
+.ant-menu {
+  @apply bg-slate-50 text-slate-700;
+}
+
+/* Menu item */
+.ant-menu-item,
+.ant-menu-submenu-title {
+  @apply mx-2 my-1 rounded-md px-3 transition-colors duration-200;
+}
+
+/* Hover (normal items + sub items) */
+.ant-menu-item:hover,
+.ant-menu-submenu-title:hover {
+  @apply bg-slate-200 text-indigo-700;
+}
+
+/* Selected item */
+.ant-menu-item-selected {
+  @apply bg-indigo-100 text-indigo-700 font-medium;
+}
+
+/* Hover on selected (IMPORTANT FIX) */
+.ant-menu-item-selected:hover {
+  @apply bg-indigo-200 text-indigo-800;
+}
+
+/* Submenu selected parent */
+.ant-menu-submenu-selected > .ant-menu-submenu-title {
+  @apply bg-indigo-100 text-indigo-700;
+}
+
+/* Remove AntD default after effect */
+.ant-menu-item::after {
+  display: none;
+}
+
+/* .ant-menu-item-selected {
+  border-left: 3px solid #1c398e;
+} */
+
+
+/* Compact AntD table rows */
+.ant-table-tbody > tr > td {
+  padding: 4px 8px !important;
+  font-size: 13px;
+}
+
+.ant-table-thead > tr > th {
+  padding: 8px 8px !important;
+  font-size: 13px;
+}
+
+@media (min-width: 768px) {
+  .ant-table-body {
+    min-height: calc(100vh - 360px) !important;
+  }
+}
+
+/* On mobile, reset to auto so it doesn't force a stretch */
+@media (max-width: 767px) {
+  .ant-table-body {
+    min-height: calc(90vh - 315px) !important;
+    /* Optional: Limit height on mobile so the internal scroll works */
+    max-height: 60vh; 
+    overflow-y: auto;
+  }
+}

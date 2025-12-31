@@ -78,24 +78,7 @@ const SidebarDrawer = ({ open, setOpen }) => {
         <ConfigProvider
           theme={{
             token: {
-              colorPrimary: "#1c398e", // selector / active indicator
-            },
-            components: {
-              Layout: {
-                siderBg: "#0f172a", // sidebar background
-              },
-              Menu: {
-                darkItemBg: "#0f172a",
-                darkItemColor: "#cbd5f5",
-
-                darkItemHoverBg: "#1e293b",
-                darkItemHoverColor: "#ffffff",
-
-                darkItemSelectedBg: "#1c398e",
-                darkItemSelectedColor: "#ffffff",
-
-                // darkSubMenuItemBg: "#020617",
-              },
+              colorPrimary: "#1c398e",
             },
           }}
         >
@@ -106,17 +89,22 @@ const SidebarDrawer = ({ open, setOpen }) => {
               onPointerLeave={() => setOpen(false)}
               onCollapse={(value) => setCollapsed(value)}
               style={{ margin: 0, padding: 0 }}
+              theme="light"
+              className="
+      bg-slate-50
+    border-r border-gray-200
+  "
             >
               <div
-                className={`w-auto h-28 flex flex-col border-b-2 border-white/70 justify-center items-center md:gap-3 py-4 md:py-2 md:mb-2`}
+                className={`w-auto h-28 flex flex-col border-b-2 border-[#1c398e] justify-center items-center md:gap-3 py-4 md:py-2 md:mb-2`}
               >
-                <img
-                  src={logo}
-                  alt="logoImg"
-                  className="h-8 w-8 md:h-16 md:w-16 transition-all duration-300 ease-in-out"
-                />
+                  <img
+                    src={logo}
+                    alt="logoImg"
+                    className="h-8 w-8 md:h-16 md:w-16 transition-all duration-300 ease-in-out"
+                  />
                 <p
-                  className={`hidden md:flex text-white font-bold
+                  className={`hidden md:flex text-[#1c398e] font-bold
       transition-all duration-300 ease-in-out ${
         collapsed ? "opacity-0" : "opacity-100"
       }`}
@@ -126,7 +114,7 @@ const SidebarDrawer = ({ open, setOpen }) => {
               </div>
               <div className="demo-logo-vertical" />
               <Menu
-                theme="dark"
+                theme="light"
                 mode="inline"
                 // defaultSelectedKeys={[location.pathname]}
                 selectedKeys={[location.pathname]}
@@ -135,6 +123,7 @@ const SidebarDrawer = ({ open, setOpen }) => {
                 onClick={({ key }) => navigate(key)}
                 onOpenChange={(keys) => setOpenKeys(keys)}
                 items={items}
+                className="bg-slate-50"
               />
             </Sider>{" "}
           </Layout>

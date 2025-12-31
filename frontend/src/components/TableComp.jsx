@@ -159,7 +159,7 @@ const TableComp = ({ dataSet }) => {
               },
             }}
           >
-            <Button color="primary" variant="outlined" size="small">
+            <Button color="primary" variant="outlined" size="small" style={{padding: "0px 10px"}}>
               True
             </Button>
           </ConfigProvider>
@@ -281,7 +281,8 @@ const TableComp = ({ dataSet }) => {
   ];
   return (
     <>
-      <div className="h-auto w-full p-4 bg-white rounded-lg shadow-lg">
+      {/* <div className="h-auto w-full p-4 bg-white rounded-lg shadow-lg"> */}
+      <div className="w-full bg-white rounded-lg shadow-md p-3">
         <div className="flex flex-col lg:flex-row justify-between w-full gap-1 lg:gap-4 mb-4">
           <div className="flex flex-col xl:flex-row gap-2 xl:gap-10 w-full mt-3 md:px-2 md:mt-2">
             <div className="min-w-10 sm:w-90 md:min-w-75 md:mr-8">
@@ -358,7 +359,8 @@ const TableComp = ({ dataSet }) => {
             columns={columns}
             dataSource={filteredData}
             onChange={handleChange}
-            scroll={{ x: "max-content", y: 400 }}
+            // scroll={{ x: "max-content", y: 400 }}
+            scroll={{ x: "max-content", y: "calc(100vh - 340px)" }}
             size="small"
           />
         </div>

@@ -23,7 +23,7 @@ import { Button, Flex } from "antd";
 import { useNavigate, useLocation } from "react-router-dom";
 import DashboardHome from "./dashboardPages/DashboardHome.jsx";
 import Users from "./dashboardPages/Users.jsx";
-import { useAuth } from "../context/authContext.jsx";
+import { useAuth } from "../context/AuthContext.jsx";
 import BreadcrumbComp from "../components/BreadcrumbComp.jsx";
 import { LuLogOut } from "react-icons/lu";
 import { MdFullscreenExit } from "react-icons/md";
@@ -167,7 +167,7 @@ const Dashboard = () => {
         <SidebarDrawer open={sliderOpen} setOpen={setSliderOpen} />
       </div>
 
-      <ConfigProvider
+      {/* <ConfigProvider
         theme={{
           token: {
             colorPrimary: "#1c398e", // selector / active indicator
@@ -190,9 +190,10 @@ const Dashboard = () => {
             },
           },
         }}
-      >
-        <Layout style={{ minHeight: "100vh" }}>
-          {/* <Sider
+      > */}
+      {/* <Layout style={{ minHeight: "100vh" }}> */}
+      <Layout className="min-h-screen">
+        {/* <Sider
             collapsible
             collapsed={collapsed}
             onCollapse={(value) => setCollapsed(value)}
@@ -227,41 +228,43 @@ const Dashboard = () => {
               items={items}
             />
           </Sider> */}
-          <Layout>
-            <div className="h-auto min-h-12 border-b border-gray-300 shadow-2xl flex bg-white items-center px-4">
-              <p className="text-xl font-bold text-gray-800 min-w-[12rem] w-[16rem]">
-                Welcome, {user.userName}
-              </p>
-              {/* <div className="hidden md:block w-full">
+        {/* <Layout> */}
+        <Layout className="flex flex-col">
+          <div className="h-auto min-h-12 border-b border-gray-300 shadow-2xl flex bg-white items-center px-4">
+            <p className="text-xl font-bold text-gray-800 min-w-[12rem] w-[16rem]">
+              Welcome, {user.userName}
+            </p>
+            {/* <div className="hidden md:block w-full">
               <Navbar />
             </div> */}
-              <div className="ml-auto text-center">
-                <Flex gap="small">
-                  <div className="flex gap-3">
-                    {/* <Button danger onClick={logout}> */}
-                    <span className="text-lg cursor-pointer">
-                      <MdFullscreenExit onClick={logout} />
-                    </span>
-                    <div className="border-r-2 border-gray-500"></div>
-                    <span className="text-lg cursor-pointer">
-                      <IoIosLock onClick={logout} />
-                    </span>
-                    <div className="border-r-2 border-gray-500"></div>
-                    <span className="text-lg cursor-pointer">
-                      <LuLogOut onClick={logout} />
-                    </span>
-                  </div>
-                  {/* </Button> */}
-                </Flex>
-              </div>
+            <div className="ml-auto text-center">
+              <Flex gap="small">
+                <div className="flex gap-3">
+                  {/* <Button danger onClick={logout}> */}
+                  <span className="text-lg cursor-pointer">
+                    <MdFullscreenExit onClick={logout} />
+                  </span>
+                  <div className="border-r-2 border-gray-500"></div>
+                  <span className="text-lg cursor-pointer">
+                    <IoIosLock onClick={logout} />
+                  </span>
+                  <div className="border-r-2 border-gray-500"></div>
+                  <span className="text-lg cursor-pointer">
+                    <LuLogOut onClick={logout} />
+                  </span>
+                </div>
+                {/* </Button> */}
+              </Flex>
             </div>
+          </div>
 
-            <Content style={{ margin: "0 16px" }}>
-              {/* <Breadcrumb
+          {/* <Content className="px-4 py-2 bg-gray-100 min-h-[calc(100vh-120px)]"> */}
+          <Content className="flex-1 px-4 py-2 bg-gray-100">
+            {/* <Breadcrumb
               style={{ margin: "16px 0" }}
               items={[{ title: "User" }, { title: "Bill" }]}
             /> */}
-              {/* <div
+            {/* <div
               style={{
                 padding: 24,
                 minHeight: 360,
@@ -271,137 +274,141 @@ const Dashboard = () => {
             >
               Bill is a cat.
             </div> */}
-              <div className="h-auto w-auto lg:h-21 gap-2 lg:gap-0 py-2 md:py-2 flex items-start justify-center lg:items-start flex-col md:flex-row ">
-                <div className="w-auto md:min-w-[24rem] lg:px-2 flex flex-col gap-1 h-auto">
-                  {/* <BreadcrumbComp /> */}
-                  <div className="flex gap-2 flex-wrap items-center px-2 mr-20 ">
-                    <FaUser className="" />
-                    <div className="flex  items-center py-1 items-center rounded-md">
-                      {location.pathname
-                        .split("/")
-                        .filter(Boolean)
-                        .map((path, index, arr) => (
-                          <Link key={index} to={`/${path}`}>
-                            <p className="text-md text-black font-bold">
-                              {path.toLocaleUpperCase()}
-                              {index < arr.length - 1 && (
-                                <MdKeyboardArrowRight className="inline h-5 w-5 -translate-y-[1px]" />
-                              )}
-                            </p>
-                          </Link>
-                        ))}
+            {/* <div className="h-auto w-auto lg:h-21 gap-2 lg:gap-0 py-2 md:py-2 flex items-start justify-center lg:items-start flex-col md:flex-row ">
+              <div className="w-auto md:min-w-[24rem] lg:px-2 flex flex-col gap-1 h-auto"> */}
+            <div className="h-auto w-auto lg:h-18 pb-2 lg:pb-0 gap-2 lg:gap-0 flex items-start justify-center lg:items-start flex-col md:flex-row ">
+              <div className="w-auto md:min-w-[24rem] lg:px-2 flex flex-col gap-1 h-auto">
+                {/* <BreadcrumbComp /> */}
+                {/* <div className="flex gap-2 flex-wrap items-center px-2 mr-20 "> */}
+                <div className="flex gap-1 items-center px-2">
+                  <FaUser className="" />
+                  <div className="flex  items-center py-1 items-center rounded-md">
+                    {location.pathname
+                      .split("/")
+                      .filter(Boolean)
+                      .map((path, index, arr) => (
+                        <Link key={index} to={`/${path}`}>
+                          <p className="text-md text-black font-bold">
+                            {path.toLocaleUpperCase()}
+                            {index < arr.length - 1 && (
+                              <MdKeyboardArrowRight className="inline h-5 w-5 -translate-y-[1px]" />
+                            )}
+                          </p>
+                        </Link>
+                      ))}
+                  </div>
+                </div>
+                <div className="flex gap-2">
+                  {query.type && query.type != "All" && (
+                    <div className="w-auto border border-gray-500 flex bg-gray-200 rounded-full px-3 py-[2px] gap-2 items-center justify-start">
+                      <p className="whitespace-nowrap">
+                        User Type:{" "}
+                        <span className="text-blue-900 font-bold">
+                          {query.type}
+                        </span>
+                      </p>
+                      <button
+                        className="translate-y-[1px] cursor-pointer"
+                        onClick={() => {
+                          setQuery((pre) => ({ ...pre, type: "All" }));
+                        }}
+                      >
+                        <IoCloseOutline size={18} />
+                      </button>
                     </div>
-                  </div>
-                  <div className="flex gap-2">
-                    {query.type && query.type != "All" && (
-                      <div className="w-auto border border-gray-500 flex bg-gray-200 rounded-full px-3 py-[2px] gap-2 items-center justify-start">
-                        <p className="whitespace-nowrap">
-                          User Type:{" "}
-                          <span className="text-blue-900 font-bold">
-                            {query.type}
-                          </span>
-                        </p>
-                        <button
-                          className="translate-y-[1px] cursor-pointer"
-                          onClick={() => {
-                            setQuery((pre) => ({ ...pre, type: "All" }));
-                          }}
-                        >
-                          <IoCloseOutline size={18} />
-                        </button>
-                      </div>
-                    )}
-                    {query.role && query.role != "All" && (
-                      <div className=" w-auto border border-gray-500 flex bg-gray-200 rounded-full px-3 py-[2px] gap-2 items-center justify-start">
-                        <p className="whitespace-nowrap">
-                          User Role:{" "}
-                          <span className="text-blue-900 font-bold">
-                            {query.role}
-                          </span>
-                        </p>
-                        <button
-                          className="translate-y-[1px] cursor-pointer"
-                          onClick={() =>
-                            setQuery((pre) => ({ ...pre, role: "All" }))
-                          }
-                        >
-                          <IoCloseOutline size={18} />
-                        </button>
-                      </div>
-                    )}
-                  </div>
-                </div>
-                <div className="flex wrap gap-2 lg:ml-auto w-full h-7 lg:px-2 text-sm lg:text-md items-center justify-start lg:justify-end">
-                  <button className="bg-blue-900 text-white px-3 py-1 rounded-full cursor-pointer hover:shadow-2xl hover:bg-blue-800 hover:bg-blue-800 transition-all duration-300">
-                    <span className="flex items-center gap-2 h-5 w-5 sm:h-auto sm:w-auto justify-center">
-                      <MdFormatLineSpacing />
-                      <div className="hidden sm:block">
-                        <p className="whitespace-nowrap">Columns</p>
-                      </div>
-                    </span>
-                  </button>
-                  <FilterModal
-                    arrow={arrow}
-                    setArrow={setArrow}
-                    dataSet={data}
-                    filterByRoleValue={filterByRole}
-                    filterByUserTypeValue={filterByUserType}
-                    filterValues={setQueryHandler}
-                    queryVal={query}
-                  />
-
-                  <button
-                    className="bg-blue-900 text-white px-3 py-1 rounded-full cursor-pointer hover:shadow-2xl hover:bg-blue-800 transition-all duration-300"
-                    onClick={() => exportToExcel()}
-                  >
-                    <span className="flex items-center gap-2 h-5 w-5 sm:h-auto sm:w-auto justify-center">
-                      <PiMicrosoftExcelLogoFill />
-                      <div className="hidden sm:block">
-                        <p className="whitespace-nowrap">Excel</p>
-                      </div>
-                    </span>
-                  </button>
-                  <button
-                    className="bg-blue-900 text-white px-3 py-1 rounded-full cursor-pointer hover:shadow-2xl hover:bg-blue-800 transition-all duration-300"
-                    onClick={() => {
-                      setOpen(true);
-                      setIsEdit(false);
-                      setSelectEditData(null);
-                    }}
-                  >
-                    <span className="flex items-center gap-2 h-5 w-5 sm:h-auto sm:w-auto justify-center">
-                      <IoMdAdd />
-                      <div className="hidden sm:block">
-                        <p className="whitespace-nowrap">Add User</p>
-                      </div>
-                    </span>
-                  </button>
+                  )}
+                  {query.role && query.role != "All" && (
+                    <div className=" w-auto border border-gray-500 flex bg-gray-200 rounded-full px-3 py-[2px] gap-2 items-center justify-start">
+                      <p className="whitespace-nowrap">
+                        User Role:{" "}
+                        <span className="text-blue-900 font-bold">
+                          {query.role}
+                        </span>
+                      </p>
+                      <button
+                        className="translate-y-[1px] cursor-pointer"
+                        onClick={() =>
+                          setQuery((pre) => ({ ...pre, role: "All" }))
+                        }
+                      >
+                        <IoCloseOutline size={18} />
+                      </button>
+                    </div>
+                  )}
                 </div>
               </div>
-              <div className="w-full bg-gray-100 min-h-[calc(100vh-200px)] overflow-hidden relative">
-                <Routes>
-                  <Route index element={<DashboardHome />} />
-                  <Route
-                    path="/users"
-                    element={<Users dataSet={filteredData} />}
-                  />
-                  <Route path="*" element={<div>Page Not Found</div>} />
-                </Routes>
-                <DrawerComp
-                  open={open}
-                  onClose={() => setOpen(false)}
-                  isEdit={isEdit}
-                  editData={selectEditData}
-                  updateData={updateData}
+              <div className="flex wrap gap-2 lg:ml-auto w-full h-7 lg:px-2 text-sm lg:text-md items-center justify-start lg:justify-end">
+                <button className="bg-blue-900 text-white px-3 py-1 rounded-full cursor-pointer hover:shadow-2xl hover:bg-blue-800 hover:bg-blue-800 transition-all duration-300">
+                  <span className="flex items-center gap-2 h-5 w-5 sm:h-auto sm:w-auto justify-center">
+                    <MdFormatLineSpacing />
+                    <div className="hidden sm:block">
+                      <p className="whitespace-nowrap">Columns</p>
+                    </div>
+                  </span>
+                </button>
+                <FilterModal
+                  arrow={arrow}
+                  setArrow={setArrow}
+                  dataSet={data}
+                  filterByRoleValue={filterByRole}
+                  filterByUserTypeValue={filterByUserType}
+                  filterValues={setQueryHandler}
+                  queryVal={query}
                 />
+
+                <button
+                  className="bg-blue-900 text-white px-3 py-1 rounded-full cursor-pointer hover:shadow-2xl hover:bg-blue-800 transition-all duration-300"
+                  onClick={() => exportToExcel()}
+                >
+                  <span className="flex items-center gap-2 h-5 w-5 sm:h-auto sm:w-auto justify-center">
+                    <PiMicrosoftExcelLogoFill />
+                    <div className="hidden sm:block">
+                      <p className="whitespace-nowrap">Excel</p>
+                    </div>
+                  </span>
+                </button>
+                <button
+                  className="bg-blue-900 text-white px-3 py-1 rounded-full cursor-pointer hover:shadow-2xl hover:bg-blue-800 transition-all duration-300"
+                  onClick={() => {
+                    setOpen(true);
+                    setIsEdit(false);
+                    setSelectEditData(null);
+                  }}
+                >
+                  <span className="flex items-center gap-2 h-5 w-5 sm:h-auto sm:w-auto justify-center">
+                    <IoMdAdd />
+                    <div className="hidden sm:block">
+                      <p className="whitespace-nowrap">Add User</p>
+                    </div>
+                  </span>
+                </button>
               </div>
-            </Content>
-            <Footer style={{ textAlign: "center" }}>
-              Ant Design ©{new Date().getFullYear()} Created by Ant UED
-            </Footer>
-          </Layout>
+            </div>
+            <div className="w-full bg-gray-100 flex-1 overflow-hidden relative">
+              <Routes>
+                <Route index element={<DashboardHome />} />
+                <Route
+                  path="/users"
+                  element={<Users dataSet={filteredData} />}
+                />
+                <Route path="*" element={<div>Page Not Found</div>} />
+              </Routes>
+              <DrawerComp
+                open={open}
+                onClose={() => setOpen(false)}
+                isEdit={isEdit}
+                editData={selectEditData}
+                updateData={updateData}
+              />
+            </div>
+          </Content>
+          {/* <Footer style={{ textAlign: "center", backgroundColor: "#ffffff" }}> */}
+          <Footer className="text-center flex justify-center items-center bg-white border-t border-gray-400 h-3">
+            Ant Design ©{new Date().getFullYear()} Created by Ant UED
+          </Footer>
         </Layout>
-      </ConfigProvider>
+      </Layout>
+      {/* </ConfigProvider> */}
     </>
   );
 };
