@@ -109,7 +109,6 @@ const TableComp = ({ dataSet }) => {
     XLSX.utils.book_append_sheet(workbook, worksheet, "Users");
     XLSX.writeFile(workbook, "UsersData.xlsx");
   };
-
   const columns = [
     {
       title: "Action",
@@ -159,12 +158,22 @@ const TableComp = ({ dataSet }) => {
               },
             }}
           >
-            <Button color="primary" variant="outlined" size="small" style={{padding: "0px 10px"}}>
+            <Button
+              color="primary"
+              variant="outlined"
+              size="small"
+              style={{ padding: "0px 10px", boxShadow: "none" }}
+            >
               True
             </Button>
           </ConfigProvider>
         ) : (
-          <Button color="danger" variant="outlined" size="small">
+          <Button
+            color="danger"
+            variant="outlined"
+            size="small"
+            style={{ boxShadow: "none" }}
+          >
             False
           </Button>
         ),
@@ -238,7 +247,7 @@ const TableComp = ({ dataSet }) => {
       onFilter: (value, record) => record.rollname.includes(value),
       sorter: (a, b) => a.rollname.localeCompare(b.rollname),
       sortOrder: sortedInfo.columnKey === "rollname" ? sortedInfo.order : null,
-      ellipsis: true,
+      ellipsis: { showTitle: false },
     },
 
     {

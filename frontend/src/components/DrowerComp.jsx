@@ -40,11 +40,26 @@ const DrawerComp = ({ open, onClose, isEdit, editData }) => {
 
   return (
     <Drawer
-      title={isEdit ? "Edit User" : "Add User"}
+      title={
+        <div className="flex items-center justify-between">
+          <span className="text-base font-semibold">
+            {isEdit ? "Edit User" : "Add User"}
+          </span>
+
+          <Button
+            type="text"
+            onClick={onClose}
+            className="text-gray-500 hover:text-gray-700"
+          >
+            ✕
+          </Button>
+        </div>
+      }
       // title="Create a new account"
-      size={720}
+      size={512}
       open={open}
       onClose={onClose}
+      closable={false}
       // extra={
       //   <Space>
       //     <Button onClick={onClose}>Cancel</Button>
@@ -69,7 +84,12 @@ const DrawerComp = ({ open, onClose, isEdit, editData }) => {
         <div>
           <Row gutter={16}>
             <Col span={12}>
-              <Form.Item name="name" label="Name" rules={[{ required: true }]}>
+              <Form.Item
+                name="name"
+                label="Name"
+                style={{ marginBottom: 12 }}
+                rules={[{ required: true }]}
+              >
                 <Input placeholder="Enter name" />
               </Form.Item>
             </Col>
@@ -78,6 +98,7 @@ const DrawerComp = ({ open, onClose, isEdit, editData }) => {
               <Form.Item
                 name="clientname"
                 label="Client Name"
+                style={{ marginBottom: 12 }}
                 rules={[
                   { required: true, message: "Please enter client name" },
                 ]}
@@ -92,6 +113,7 @@ const DrawerComp = ({ open, onClose, isEdit, editData }) => {
               <Form.Item
                 name="email"
                 label="Email"
+                style={{ marginBottom: 12 }}
                 rules={[
                   {
                     required: true,
@@ -108,6 +130,7 @@ const DrawerComp = ({ open, onClose, isEdit, editData }) => {
               <Form.Item
                 name="rollname"
                 label="Role"
+                style={{ marginBottom: 12 }}
                 rules={[{ required: true, message: "Please select role" }]}
               >
                 <Select
@@ -127,6 +150,7 @@ const DrawerComp = ({ open, onClose, isEdit, editData }) => {
               <Form.Item
                 name="contactno"
                 label="Contact No"
+                style={{ marginBottom: 12 }}
                 rules={[
                   { required: true, message: "Contact number is required" },
                   {
@@ -147,6 +171,7 @@ const DrawerComp = ({ open, onClose, isEdit, editData }) => {
               <Form.Item
                 name="usertype"
                 label="User Type"
+                style={{ marginBottom: 12 }}
                 showSearch={{ optionFilterProp: "label", onSearch }}
                 rules={[{ required: true, message: "Please select user type" }]}
               >
@@ -165,6 +190,7 @@ const DrawerComp = ({ open, onClose, isEdit, editData }) => {
               <Form.Item
                 name="age"
                 label="Age"
+                style={{ marginBottom: 12 }}
                 rules={[
                   { required: true, message: "Age is required" },
                   {
@@ -187,6 +213,7 @@ const DrawerComp = ({ open, onClose, isEdit, editData }) => {
               <Form.Item
                 name="active"
                 label="User Status"
+                style={{ marginBottom: 12 }}
                 rules={[
                   { required: true, message: "Please select user status" },
                 ]}
@@ -202,12 +229,23 @@ const DrawerComp = ({ open, onClose, isEdit, editData }) => {
               </Form.Item>
             </Col>
           </Row>
+          <Form.Item
+            name="address"
+            label="Address"
+            style={{ marginBottom: 12 }}
+            rules={[{ required: true }]}
+          >
+            <Input.TextArea rows={4} placeholder="Enter address" />
+          </Form.Item>
         </div>
 
-        <Form.Item name="address" label="Address" rules={[{ required: true }]}>
-          <Input.TextArea rows={4} placeholder="Enter address" />
-        </Form.Item>
-        <Form.Item>
+        <Form.Item
+          style={{
+            marginBottom: 0,
+            borderTop: "1px solid #f0f0f0",
+            // paddingTop: 12,
+          }}
+        >
           <div className="pt-2 flex flex-row justify-between gap-2">
             <div className="flex items-center gap-1 justify-center items-center">
               <input type="checkbox" /> Active

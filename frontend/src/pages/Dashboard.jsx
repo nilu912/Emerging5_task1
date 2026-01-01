@@ -41,6 +41,8 @@ import SidebarDrawer from "../components/SidebarDrawer.jsx";
 import { MdKeyboardDoubleArrowRight } from "react-icons/md";
 import { MdKeyboardArrowRight } from "react-icons/md";
 import * as XLSX from "xlsx";
+import StaticSidebarDrawer from "../components/StaticSidebarDrawer.jsx";
+import { FaArrowCircleRight } from "react-icons/fa";
 
 const items = [
   getItem("Dashboard", "/dashboard/", <PieChartOutlined />),
@@ -79,7 +81,8 @@ const Dashboard = () => {
   const [open, setOpen] = useState(false);
   const [openKeys, setOpenKeys] = useState([]);
   const [sliderOpen, setSliderOpen] = useState(false);
-
+  const [isHovered, setIsHovered] = useState(false);
+  const isExpanded = sliderOpen || isHovered;
   const filterByRole = (role) => {
     if (role === "All") {
       setFilteredData(data);
@@ -144,12 +147,9 @@ const Dashboard = () => {
   return (
     <>
       {/* LEFT EDGE CONTROLLER */}
-      <div className="fixed left-0 top-0 h-full z-50 flex items-center">
-        {/* Hover trigger zone */}
-        {/* <div className="border h-full w-3" onMouseEnter={() => setSliderOpen(true)} /> */}
-
-        {/* Floating Arrow Button */}
+      {/* <div className="fixed left-0 top-0 h-full z-50 flex items-center">
         {!sliderOpen && (
+        // Floating Arrow Button
           <button
             onClick={() => setSliderOpen(true)}
             className="h-12 w-5 hover:w-9 
@@ -165,7 +165,7 @@ const Dashboard = () => {
         )}
 
         <SidebarDrawer open={sliderOpen} setOpen={setSliderOpen} />
-      </div>
+      </div> */}
 
       {/* <ConfigProvider
         theme={{
@@ -192,7 +192,123 @@ const Dashboard = () => {
         }}
       > */}
       {/* <Layout style={{ minHeight: "100vh" }}> */}
-      <Layout className="min-h-screen">
+      <Layout className={`min-h-screen transition-all duration-300`}>
+        {!sliderOpen && (
+          <div
+            className="h-screen hidden md:block"
+            style={{ width: "80px", flexShrink: 0, background: "transparent" }}
+          ></div>
+        )}
+        <div
+          className={`h-screen px-2 py-2 rounded-lg z-50`}
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
+          style={{
+            // MAGIC SWITCH: If Pinned -> Relative. If Hovered -> Absolute.
+            position: sliderOpen ? "relative" : "absolute",
+            height: "100vh",
+            left: 0,
+            top: 0,
+          }}
+        >
+          <Sider
+            // collapsible
+            collapsed={!isExpanded}
+            onMouseEnter={() => setCollapsed(false)}
+            trigger={null}
+            onMouseLeave={() => setCollapsed(true)}
+            onCollapse={(value) => {
+              setCollapsed(value);
+            }}
+            theme="light"
+            className="bg-slate-50 border-r rounded-lg border-gray-200 h-full shadow-xl"
+            style={{ height: "100%" }}
+            collapsedWidth={64}
+          >
+            <div className="h-full overflow-auto flex flex-col shadow-lg border border-gray-400 rounded-lg justify-between">
+              {" "}
+              <div
+                className={`w-auto flex flex-col border-b-2 border-[#1c398e] justify-center items-center md:gap-3 py-4 md:py-2 md:mb-2`}
+              >
+                <div
+                  className="flex flex-row items-center gap-2 cursor-pointer"
+                  onClick={() => setSliderOpen(!sliderOpen)} // Toggle "Pin" state
+                >
+                  {" "}
+                  <FaArrowCircleRight
+                    size={40}
+                    className={`transition-transform duration-300 ${
+                      sliderOpen ? "rotate-180" : "rotate-0"
+                    }`}
+                  />
+                </div>
+                {/* <p
+                  className={`hidden md:flex text-[#1c398e] font-bold
+      transition-all duration-300 ease-in-out ${
+        (sliderOpen && collapsed) ? "opacity-0" : "opacity-100"
+      }`}
+                >
+                  INDITRONICS
+                </p> */}
+              </div>
+              <div className="demo-logo-vertical" />
+              <Menu
+                theme="light"
+                mode="inline"
+                // defaultSelectedKeys={[location.pathname]}
+                selectedKeys={[location.pathname]}
+                // selectedGroupKeys={[]}
+                openKeys={openKeys}
+                onClick={({ key }) => navigate(key)}
+                onOpenChange={(keys) => setOpenKeys(keys)}
+                items={items}
+              />
+              <div
+                className={`w-auto h-28 flex flex-col border-t-2 border-[#1c398e] justify-center items-center md:gap-3 py-4 md:py-2 md:mb-2 mt-auto`}
+              >
+                <img
+                  src={logo}
+                  alt="logoImg"
+                  className="h-8 w-8 md:h-16 md:w-16 transition-all duration-300 ease-in-out"
+                />
+                <p
+                  className={`hidden md:flex text-[#1c398e] font-bold whitespace-nowrap
+                    transition-all duration-300 ease-in-out ${
+                      !isExpanded
+                        ? "opacity-0 w-0 overflow-hidden"
+                        : "opacity-100 w-auto hidden"
+                    }`}
+                >
+                  INDITRONICS
+                </p>
+              </div>
+              <div className="demo-logo-vertical" />
+            </div>
+          </Sider>
+        </div>
+
+        {/* <div className="fixed left-0 top-0 h-full z-50 flex items-center">
+          {!sliderOpen && (
+            // Floating Arrow Button
+            <button
+              onClick={() => setSliderOpen(true)}
+              className="h-12 w-5 hover:w-9 
+                 bg-blue-900 text-white 
+                 rounded-tr-md rounded-br-md
+                 shadow-xl backdrop-blur-md
+                 flex items-center justify-center
+                 transition-all duration-300 ease-in-out
+                 hover:bg-blue-800"
+            >
+              <MdKeyboardDoubleArrowRight className="text-lg" />
+            </button>
+          )}
+
+
+
+          <StaticSidebarDrawer open={sliderOpen} setOpen={setSliderOpen} />
+        </div> */}
+
         {/* <Sider
             collapsible
             collapsed={collapsed}
@@ -229,8 +345,8 @@ const Dashboard = () => {
             />
           </Sider> */}
         {/* <Layout> */}
-        <Layout className="flex flex-col">
-          <div className="h-auto min-h-12 border-b border-gray-300 shadow-2xl flex bg-white items-center px-4">
+        <Layout className={`flex flex-col`}>
+          <div className="h-auto min-h-12 border-b border-gray-300 shadow-md flex bg-white relative z-20 items-center px-4">
             <p className="text-xl font-bold text-gray-800 min-w-[12rem] w-[16rem]">
               Welcome, {user.userName}
             </p>
@@ -340,7 +456,7 @@ const Dashboard = () => {
               <div className="flex wrap gap-2 lg:ml-auto w-full h-7 lg:px-2 text-sm lg:text-md items-center justify-start lg:justify-end">
                 <button className="bg-blue-900 text-white px-3 py-1 rounded-full cursor-pointer hover:shadow-2xl hover:bg-blue-800 hover:bg-blue-800 transition-all duration-300">
                   <span className="flex items-center gap-2 h-5 w-5 sm:h-auto sm:w-auto justify-center">
-                    <MdFormatLineSpacing />
+                    <MdFormatLineSpacing className="translate-y-[1px]"/>
                     <div className="hidden sm:block">
                       <p className="whitespace-nowrap">Columns</p>
                     </div>
@@ -361,7 +477,7 @@ const Dashboard = () => {
                   onClick={() => exportToExcel()}
                 >
                   <span className="flex items-center gap-2 h-5 w-5 sm:h-auto sm:w-auto justify-center">
-                    <PiMicrosoftExcelLogoFill />
+                    <PiMicrosoftExcelLogoFill className="translate-y-[1px]"/>
                     <div className="hidden sm:block">
                       <p className="whitespace-nowrap">Excel</p>
                     </div>
@@ -376,7 +492,7 @@ const Dashboard = () => {
                   }}
                 >
                   <span className="flex items-center gap-2 h-5 w-5 sm:h-auto sm:w-auto justify-center">
-                    <IoMdAdd />
+                    <IoMdAdd className="translate-y-[1px]"/>
                     <div className="hidden sm:block">
                       <p className="whitespace-nowrap">Add User</p>
                     </div>
@@ -384,7 +500,7 @@ const Dashboard = () => {
                 </button>
               </div>
             </div>
-            <div className="w-full bg-gray-100 flex-1 overflow-hidden relative">
+            <div className="w-full rounded-lg shadow-lg flex-1 overflow-hidden relative">
               <Routes>
                 <Route index element={<DashboardHome />} />
                 <Route

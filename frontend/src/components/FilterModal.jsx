@@ -35,10 +35,10 @@ const FilterModal = ({ arrow, setArrow, dataSet, filterValues, queryVal }) => {
       label: role,
     }));
     setRoleOptions([
-      {
-        value: "All",
-        label: "All",
-      },
+      // {
+      //   value: "All",
+      //   label: "All",
+      // },
       ...rolesOptions,
     ]);
     const usersOptions = Array.from(users).map((user) => ({
@@ -46,10 +46,10 @@ const FilterModal = ({ arrow, setArrow, dataSet, filterValues, queryVal }) => {
       label: user,
     }));
     setUserOptions([
-      {
-        value: "All",
-        label: "All",
-      },
+      // {
+      //   value: "All",
+      //   label: "All",
+      // },
       ...usersOptions,
     ]);
   }, []);
@@ -147,7 +147,7 @@ const FilterModal = ({ arrow, setArrow, dataSet, filterValues, queryVal }) => {
           >
             <button className="bg-blue-900 text-white px-3 py-1 border rounded-full cursor-pointer hover:shadow-2xl hover:bg-blue-800 transition-all duration-300">
               <span className="flex items-center gap-2 h-5 w-5 sm:h-auto sm:w-auto justify-center">
-                <IoFilterSharp />
+                <IoFilterSharp className="translate-y-[1px]"/>
                 <div className="hidden sm:block">
                   <p className="whitespace-nowrap">Filter</p>
                 </div>
